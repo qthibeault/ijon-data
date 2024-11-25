@@ -216,20 +216,23 @@ static void mainLoop(bool video, bool trace)
 							}
 					}
 				}
-
+				uint8_t chs[5];
 				if(sleep == 0){
 					if(enter==0){
 						enter = 1;
 						engine.writeData(0x0760, level);
 					} else {
-						uint8_t ch;
-						if(read(STDIN_FILENO, &ch, 1) <1 ){
+						// uint8_t ch;
+
+						// if(read(STDIN_FILENO, &ch, 1) <1 ){
+						if (read(STDIN_FILENO, chs, 4) < 4) {	// 1,0\n
 							running = false;
 							if(!video){
 								break;
 							}
 						}else{
-							sleep = ch;
+							// sleep = ch;
+							sleep = chs[0];
 							//uint8_t key = ch%2;
 							keys[0] = !keys[0];
 						}
@@ -240,13 +243,23 @@ static void mainLoop(bool video, bool trace)
 
 				Controller& controller1 = engine.getController1();
 
-				if(running){
-					controller1.setButtonState(BUTTON_A,			keys[0] && hammertime);
-					controller1.setButtonState(BUTTON_B,			enter && sleep && 1);
-					controller1.setButtonState(BUTTON_RIGHT,	enter && sleep && 1);
-					controller1.setButtonState(BUTTON_START, enter);
+				// if ch == 0 => BUTTON_A
+				// if ch == 1 => BUTTON_RIGHT
+
+				if (running) {
+					controller1.setButtonState(BUTTON_A,		chs[0]-'0'); // 1st char, activate if not '0'
+					controller1.setButtonState(BUTTON_B,			chs[2]-'0');
+					controller1.setButtonState(BUTTON_RIGHT,	chs[2]-'0'); // skip comma, 3rd char, activate if not '0'
+					controller1.setButtonState(BUTTON_START, chs[0]-'0');
 					engine.update();
 				}
+				// if(running){
+				// 	controller1.setButtonState(BUTTON_A,			keys[0] && hammertime);
+				// 	controller1.setButtonState(BUTTON_B,			enter && sleep && 1);
+				// 	controller1.setButtonState(BUTTON_RIGHT,	enter && sleep && 1);
+				// 	controller1.setButtonState(BUTTON_START, enter);
+				// 	engine.update();
+				// }
 
 
         //const Uint8* sdl_keys = SDL_GetKeyboardState(NULL);
@@ -310,16 +323,16 @@ static void mainLoop(bool video, bool trace)
 					SDL_RenderPresent(renderer);
 
         /**
-         * Ensure that the framerate stays as close to the desired FPS as possible. If the frame was rendered faster, then delay. 
+         * Ensure that the framerate stays as close to the desired FPS as possible. If the frame was rendered faster, then delay.
          * If the frame was slower, reset time so that the game doesn't try to "catch up", going super-speed.
          */
 					int now = SDL_GetTicks();
 					int delay = progStartTime + int(double(frame) * double(MS_PER_SEC) / double(Configuration::getFrameRate())) - now;
-					if(delay > 0) 
+					if(delay > 0)
 					{
 							SDL_Delay(delay);
 					}
-					else 
+					else
 					{
 							frame = 0;
 							progStartTime = now;
@@ -425,7 +438,7 @@ int main(int argc, char** argv)
 			exit(0);
 		}
 
-		
+
 
     if (!initialize(video))
     {
