@@ -357,7 +357,7 @@ static void mainLoop(bool video, bool trace)
 				}
 				if(trace && frame%4 == 0){
 					// printf("%d,%d\n", world_pos, pos_y);
-					printf("{x=%d,y=%d,start=%d,dead=%d}\n", world_pos, pos_y, game_start, game_over);
+					printf("{\"x\":%d, \"y\":%d, \"start\":%d, \"dead\":%d}\n", world_pos, pos_y, game_start, game_over);
 				}
 				//if(engine.readData(0x1d) == 0x0){ //on a solid surface
 #ifdef _USE_IJON
@@ -381,7 +381,7 @@ static void mainLoop(bool video, bool trace)
 				}else{ idle = 0; last_world_pos = world_pos; }
 				if(hammertime && idle > 4){
 					game_over = 1;
-					printf("{x=%d,y=%d,start=%d,dead=%d}\n", world_pos, pos_y, game_start, game_over);
+					printf("{\"x\":%d, \"y\":%d, \"start\":%d, \"dead\":%d}\n", world_pos, pos_y, game_start, game_over);
 					return;
 				} //lazy bastard
 
