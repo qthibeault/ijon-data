@@ -234,7 +234,7 @@ static void mainLoop(bool video, bool trace)
 						}else{
 							printf("current action: %s\n", chs);
 							// sleep = ch;
-							sleep = chs[0];
+							sleep = 10;
 							//uint8_t key = ch%2;
 							keys[0] = !keys[0];
 						}
@@ -255,7 +255,7 @@ static void mainLoop(bool video, bool trace)
 					controller1.setButtonState(BUTTON_A,		chs[0]-'0'>0); // 1st char, activate if not '0'
 					controller1.setButtonState(BUTTON_B,			chs[2]-'0'>0);
 					controller1.setButtonState(BUTTON_RIGHT,	chs[2]-'0'>0); // skip comma, 3rd char, activate if not '0'
-					controller1.setButtonState(BUTTON_START, chs[0]-'0'>0);
+					controller1.setButtonState(BUTTON_START, enter );//chs[0]-'0' > 0);
 					engine.update();
 				}
 				// if(running){
