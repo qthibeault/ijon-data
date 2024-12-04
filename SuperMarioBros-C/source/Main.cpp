@@ -232,6 +232,7 @@ static void mainLoop(bool video, bool trace)
 								break;
 							}
 						}else{
+							printf("current action: %s\n", chs);
 							// sleep = ch;
 							sleep = chs[0];
 							//uint8_t key = ch%2;
